@@ -7,7 +7,9 @@ function Student() {
   const [course, setCourse] = useState("");
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
+  const [photo, setPhoto] = useState();
   const [page, setPage] = useState(1);
+
   const perPage = 5;
 
   const last = page * perPage;
@@ -26,7 +28,13 @@ function Student() {
   }, []);
 
   const save = () => {
-    axios.post("http://127.0.0.1:8000/api/student/", { name, age, course });
+    let form = new FormData();
+
+    form.append("name", name);
+    form.append("age", age);
+    form.append("course", course);
+    form.append("photo", photo);
+    axios.post("http://127.0.0.1:8000/api/student/", form);
   };
 
   return (
@@ -47,6 +55,7 @@ function Student() {
             onChange={(e) => setSearch(e.target.value)}
             placeholder="search"
           />
+          <input type="file" onChange={(e) => setPhoto(e.target.files[0])} />
           <button onClick={() => setPage(page - 1)}>Prev</button>
           <button onClick={() => setPage(page + 1)}>Next</button>
           <button onClick={save}>Save</button>
